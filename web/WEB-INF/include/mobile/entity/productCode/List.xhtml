@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="ProductCodeListPage">
+        <pm:header title="#{myBundle.ListProductCodeTitle}">
+            <h:form>
+                <p:commandButton id="backButton"   styleClass="ui-btn-left  ui-btn-inline" icon="ui-icon-arrow-l" value="#{myBundle.Back}" action="#{mobilePageController.navigateBackInHistory('/mobile/index')}"/>
+                <p:commandButton id="createButton" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus"    value="#{myBundle.Create}" update=":ProductCodeCreatePage:ProductCodeCreateForm" actionListener="#{productCodeController.prepareCreate}" action="#{mobilePageController.navigateWithHistory('pm:ProductCodeCreatePage')}">
+                    <f:actionListener binding="#{currentPageListener}"/>
+                </p:commandButton>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="ProductCodeListForm">
+
+                <p:dataTable id="datalist"
+                             value="#{productCodeController.items}"
+                             var="item"
+                             rowKey="#{item.prodCode}"
+                             paginator="true"
+                             rows="10"
+                             rowsPerPageTemplate="10,20,30,40,50"
+                             selectionMode="single"
+                             selection="#{productCodeController.selected}"
+                             reflow="true">
+
+                    <p:ajax event="rowSelect"   update="@form:editButton,@form:deleteButton,@form:navigationMenuButton,@form:navigationMenuPanel"/>
+                    <p:ajax event="rowUnselect" update="@form:editButton,@form:deleteButton,@form:navigationMenuButton,@form:navigationMenuPanel"/>
+                    <p:ajax event="swipeleft"   oncomplete="document.getElementById('ProductCodeListPage:ProductCodeListForm:deleteButton').click();"/>
+                    <p:ajax event="tap"         oncomplete="document.getElementById('ProductCodeListPage:ProductCodeListForm:editButton').click();"/>
+                    <p:ajax event="taphold"     oncomplete="document.getElementById('ProductCodeListPage:ProductCodeListForm:navigationMenuButton').click();"/>
+
+                    <p:column sortBy="#{item.prodCode}" filterBy="#{item.prodCode}" headerText="#{myBundle.ListProductCodeTitle_prodCode}">
+                        <h:outputText value="#{item.prodCode}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.discountCode}" filterBy="#{item.discountCode}" headerText="#{myBundle.ListProductCodeTitle_discountCode}">
+                        <h:outputText value="#{item.discountCode}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.description}" filterBy="#{item.description}" headerText="#{myBundle.ListProductCodeTitle_description}">
+                        <h:outputText value="#{item.description}"/>
+                    </p:column>
+
+                </p:dataTable>
+                <p:commandButton id="editButton"   style="visibility: hidden;" icon="ui-icon-pencil" value="#{myBundle.Edit}" update=":ProductCodeEditPage:ProductCodeEditForm" disabled="#{empty productCodeController.selected}" actionListener="#{mobilePageController.currentPageListener}" action="#{mobilePageController.navigateWithHistory('pm:ProductCodeEditPage')}"/>
+                <p:commandButton id="deleteButton" style="visibility: hidden;" icon="ui-icon-trash"  value="#{myBundle.Delete}" actionListener="#{productCodeController.delete}" update=":growl,datalist" disabled="#{empty productCodeController.selected}"/>
+                <p:commandButton id="navigationMenuButton" style="visibility: hidden;" value="#{myBundle.Menu}" disabled="#{empty productCodeController.selected}"/>
+
+                <p:overlayPanel id="navigationMenuPanel" for="navigationMenuButton" at="right" showEffect="overlay">
+                    <h2>#{myBundle.ProductCodeHeading} #{myBundle.Menu}</h2>
+                    <p:menu>
+                        <p:menuitem value="#{myBundle.ProductCodeMenuItem_productList}" icon="ui-icon-search"  action="#{mobilePageController.navigateWithHistory}" disabled="#{empty productCodeController.selected.productList}" ajax="false">
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="#{productCodeController.navigateProductList()}"/>
+                        </p:menuitem>  
+                    </p:menu>
+                </p:overlayPanel>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

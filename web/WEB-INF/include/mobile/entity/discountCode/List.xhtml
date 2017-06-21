@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="DiscountCodeListPage">
+        <pm:header title="#{myBundle.ListDiscountCodeTitle}">
+            <h:form>
+                <p:commandButton id="backButton"   styleClass="ui-btn-left  ui-btn-inline" icon="ui-icon-arrow-l" value="#{myBundle.Back}" action="#{mobilePageController.navigateBackInHistory('/mobile/index')}"/>
+                <p:commandButton id="createButton" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus"    value="#{myBundle.Create}" update=":DiscountCodeCreatePage:DiscountCodeCreateForm" actionListener="#{discountCodeController.prepareCreate}" action="#{mobilePageController.navigateWithHistory('pm:DiscountCodeCreatePage')}">
+                    <f:actionListener binding="#{currentPageListener}"/>
+                </p:commandButton>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="DiscountCodeListForm">
+
+                <p:dataTable id="datalist"
+                             value="#{discountCodeController.items}"
+                             var="item"
+                             rowKey="#{item.discountCode}"
+                             paginator="true"
+                             rows="10"
+                             rowsPerPageTemplate="10,20,30,40,50"
+                             selectionMode="single"
+                             selection="#{discountCodeController.selected}"
+                             reflow="true">
+
+                    <p:ajax event="rowSelect"   update="@form:editButton,@form:deleteButton,@form:navigationMenuButton,@form:navigationMenuPanel"/>
+                    <p:ajax event="rowUnselect" update="@form:editButton,@form:deleteButton,@form:navigationMenuButton,@form:navigationMenuPanel"/>
+                    <p:ajax event="swipeleft"   oncomplete="document.getElementById('DiscountCodeListPage:DiscountCodeListForm:deleteButton').click();"/>
+                    <p:ajax event="tap"         oncomplete="document.getElementById('DiscountCodeListPage:DiscountCodeListForm:editButton').click();"/>
+                    <p:ajax event="taphold"     oncomplete="document.getElementById('DiscountCodeListPage:DiscountCodeListForm:navigationMenuButton').click();"/>
+
+                    <p:column sortBy="#{item.discountCode}" filterBy="#{item.discountCode}" headerText="#{myBundle.ListDiscountCodeTitle_discountCode}">
+                        <h:outputText value="#{item.discountCode}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.rate}" filterBy="#{item.rate}" headerText="#{myBundle.ListDiscountCodeTitle_rate}">
+                        <h:outputText value="#{item.rate}"/>
+                    </p:column>
+
+                </p:dataTable>
+                <p:commandButton id="editButton"   style="visibility: hidden;" icon="ui-icon-pencil" value="#{myBundle.Edit}" update=":DiscountCodeEditPage:DiscountCodeEditForm" disabled="#{empty discountCodeController.selected}" actionListener="#{mobilePageController.currentPageListener}" action="#{mobilePageController.navigateWithHistory('pm:DiscountCodeEditPage')}"/>
+                <p:commandButton id="deleteButton" style="visibility: hidden;" icon="ui-icon-trash"  value="#{myBundle.Delete}" actionListener="#{discountCodeController.delete}" update=":growl,datalist" disabled="#{empty discountCodeController.selected}"/>
+                <p:commandButton id="navigationMenuButton" style="visibility: hidden;" value="#{myBundle.Menu}" disabled="#{empty discountCodeController.selected}"/>
+
+                <p:overlayPanel id="navigationMenuPanel" for="navigationMenuButton" at="right" showEffect="overlay">
+                    <h2>#{myBundle.DiscountCodeHeading} #{myBundle.Menu}</h2>
+                    <p:menu>
+                        <p:menuitem value="#{myBundle.DiscountCodeMenuItem_customerList}" icon="ui-icon-search"  action="#{mobilePageController.navigateWithHistory}" disabled="#{empty discountCodeController.selected.customerList}" ajax="false">
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="#{discountCodeController.navigateCustomerList()}"/>
+                        </p:menuitem>  
+                    </p:menu>
+                </p:overlayPanel>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

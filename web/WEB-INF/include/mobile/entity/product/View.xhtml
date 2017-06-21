@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="ProductViewPage" lazy="true">
+        <pm:header title="#{myBundle.ViewProductTitle}">
+            <h:form>
+                <p:commandButton styleClass="ui-btn-left ui-btn-inline" value="#{myBundle.Cancel}" icon="ui-icon-arrow-l" action="#{mobilePageController.navigateBackInHistory('pm:ProductListPage')}"/>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="ProductViewForm">
+
+                <h:panelGroup id="display">
+                    <p:outputPanel rendered="#{productController.selected != null}">
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_productId}"/>
+                            <h:outputText value="#{productController.selected.productId}" title="#{myBundle.ViewProductTitle_productId}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_purchaseCost}"/>
+                            <h:outputText value="#{productController.selected.purchaseCost}" title="#{myBundle.ViewProductTitle_purchaseCost}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_quantityOnHand}"/>
+                            <h:outputText value="#{productController.selected.quantityOnHand}" title="#{myBundle.ViewProductTitle_quantityOnHand}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_markup}"/>
+                            <h:outputText value="#{productController.selected.markup}" title="#{myBundle.ViewProductTitle_markup}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_available}"/>
+                            <h:selectBooleanCheckbox id="available" value="#{productController.selected.available}" title="#{myBundle.EditProductTitle_available}" required="true" requiredMessage="#{myBundle.EditProductRequiredMessage_available}" disabled="true"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_description}"/>
+                            <h:outputText value="#{productController.selected.description}" title="#{myBundle.ViewProductTitle_description}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_warehouseList}"/>
+                            <h:selectManyMenu>
+                                <f:selectItems value="#{productController.selected.warehouseList}"
+                                               var="warehouseListItem"
+                                               itemValue="#{warehouseListItem}"
+                                               itemLabel="#{warehouseListItem.name.toString()}"
+                                               />
+                                <f:converter binding="#{warehouseConverter}"/>
+                            </h:selectManyMenu>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_productCode}"/>
+                            <h:outputText value="#{productController.selected.productCode.description}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewProductLabel_manufacturerId}"/>
+                            <h:outputText value="#{productController.selected.manufacturerId.name}"/>
+                        </pm:field>
+                    </p:outputPanel>
+                </h:panelGroup>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

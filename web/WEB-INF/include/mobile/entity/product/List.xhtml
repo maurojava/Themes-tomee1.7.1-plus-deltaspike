@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="ProductListPage">
+        <pm:header title="#{myBundle.ListProductTitle}">
+            <h:form>
+                <p:commandButton id="backButton"   styleClass="ui-btn-left  ui-btn-inline" icon="ui-icon-arrow-l" value="#{myBundle.Back}" action="#{mobilePageController.navigateBackInHistory('/mobile/index')}"/>
+                <p:commandButton id="createButton" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus"    value="#{myBundle.Create}" update=":ProductCreatePage:ProductCreateForm" actionListener="#{productController.prepareCreate}" action="#{mobilePageController.navigateWithHistory('pm:ProductCreatePage')}">
+                    <f:actionListener binding="#{currentPageListener}"/>
+                </p:commandButton>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="ProductListForm">
+
+                <p:dataTable id="datalist"
+                             value="#{productController.items}"
+                             var="item"
+                             rowKey="#{item.productId}"
+                             paginator="true"
+                             rows="10"
+                             rowsPerPageTemplate="10,20,30,40,50"
+                             selectionMode="single"
+                             selection="#{productController.selected}"
+                             reflow="true">
+
+                    <p:ajax event="rowSelect"   update="@form:editButton,@form:deleteButton,@form:navigationMenuButton,@form:navigationMenuPanel" listener="#{productController.resetParents}"/>
+                    <p:ajax event="rowUnselect" update="@form:editButton,@form:deleteButton,@form:navigationMenuButton,@form:navigationMenuPanel" listener="#{productController.resetParents}"/>
+                    <p:ajax event="swipeleft"   oncomplete="document.getElementById('ProductListPage:ProductListForm:deleteButton').click();"/>
+                    <p:ajax event="tap"         oncomplete="document.getElementById('ProductListPage:ProductListForm:editButton').click();"/>
+                    <p:ajax event="taphold"     oncomplete="document.getElementById('ProductListPage:ProductListForm:navigationMenuButton').click();"/>
+
+                    <p:column sortBy="#{item.productId}" filterBy="#{item.productId}" headerText="#{myBundle.ListProductTitle_productId}">
+                        <h:outputText value="#{item.productId}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.purchaseCost}" filterBy="#{item.purchaseCost}" headerText="#{myBundle.ListProductTitle_purchaseCost}">
+                        <h:outputText value="#{item.purchaseCost}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.quantityOnHand}" filterBy="#{item.quantityOnHand}" headerText="#{myBundle.ListProductTitle_quantityOnHand}">
+                        <h:outputText value="#{item.quantityOnHand}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.markup}" filterBy="#{item.markup}" headerText="#{myBundle.ListProductTitle_markup}">
+                        <h:outputText value="#{item.markup}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.available}" filterBy="#{item.available}" headerText="#{myBundle.ListProductTitle_available}">
+                        <h:selectBooleanCheckbox id="available" value="#{item.available}" title="#{myBundle.EditProductTitle_available}" required="true" requiredMessage="#{myBundle.EditProductRequiredMessage_available}" disabled="true"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.description}" filterBy="#{item.description}" headerText="#{myBundle.ListProductTitle_description}">
+                        <h:outputText value="#{item.description}"/>
+                    </p:column>
+
+                </p:dataTable>
+                <p:commandButton id="editButton"   style="visibility: hidden;" icon="ui-icon-pencil" value="#{myBundle.Edit}" update=":ProductEditPage:ProductEditForm" disabled="#{empty productController.selected}" actionListener="#{mobilePageController.currentPageListener}" action="#{mobilePageController.navigateWithHistory('pm:ProductEditPage')}"/>
+                <p:commandButton id="deleteButton" style="visibility: hidden;" icon="ui-icon-trash"  value="#{myBundle.Delete}" actionListener="#{productController.delete}" update=":growl,datalist" disabled="#{empty productController.selected}"/>
+                <p:commandButton id="navigationMenuButton" style="visibility: hidden;" value="#{myBundle.Menu}" disabled="#{empty productController.selected}"/>
+
+                <p:overlayPanel id="navigationMenuPanel" for="navigationMenuButton" at="right" showEffect="overlay">
+                    <h2>#{myBundle.ProductHeading} #{myBundle.Menu}</h2>
+                    <p:menu>
+                        <p:menuitem value="#{myBundle.ProductMenuItem_warehouseList}" icon="ui-icon-search"  action="#{mobilePageController.navigateWithHistory}" disabled="#{empty productController.selected.warehouseList}" ajax="false">
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="#{productController.navigateWarehouseList()}"/>
+                        </p:menuitem>  
+                        <p:menuitem value="#{myBundle.ProductMenuItem_productCode}" icon="ui-icon-search" update=":ProductCodeEditPage:ProductCodeEditForm" disabled="#{empty productController.selected.productCode}" actionListener="#{productController.prepareProductCode}" action="#{mobilePageController.navigateWithHistory}">  
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="pm:ProductCodeEditPage"/>
+                        </p:menuitem>
+                        <p:menuitem value="#{myBundle.ProductMenuItem_manufacturerId}" icon="ui-icon-search" update=":ManufacturerEditPage:ManufacturerEditForm" disabled="#{empty productController.selected.manufacturerId}" actionListener="#{productController.prepareManufacturerId}" action="#{mobilePageController.navigateWithHistory}">  
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="pm:ManufacturerEditPage"/>
+                        </p:menuitem>
+                        <p:menuitem value="#{myBundle.ProductMenuItem_purchaseOrderList}" icon="ui-icon-search"  action="#{mobilePageController.navigateWithHistory}" disabled="#{empty productController.selected.purchaseOrderList}" ajax="false">
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="#{productController.navigatePurchaseOrderList()}"/>
+                        </p:menuitem>  
+                    </p:menu>
+                </p:overlayPanel>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="ProductCodeCreatePage" lazy="true">
+        <pm:header title="#{myBundle.CreateProductCodeTitle}">
+            <h:form>
+                <p:commandButton styleClass="ui-btn-left ui-btn-inline" value="#{myBundle.Cancel}" icon="ui-icon-arrow-l" action="#{mobilePageController.navigateBackInHistory('pm:ProductCodeListPage')}"/>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="ProductCodeCreateForm">
+
+                <h:panelGroup id="display" rendered="#{productCodeController.selected != null}">
+                    <p:outputPanel>
+
+                        <pm:field>
+                            <p:outputLabel value="#{myBundle.CreateProductCodeLabel_prodCode}" for="prodCode" />
+                            <p:inputText id="prodCode" value="#{productCodeController.selected.prodCode}" title="#{myBundle.CreateProductCodeTitle_prodCode}" required="true" requiredMessage="#{myBundle.CreateProductCodeRequiredMessage_prodCode}" size="2" maxlength="2"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <p:outputLabel value="#{myBundle.CreateProductCodeLabel_discountCode}" for="discountCode" />
+                            <p:inputText id="discountCode" value="#{productCodeController.selected.discountCode}" title="#{myBundle.CreateProductCodeTitle_discountCode}" required="true" requiredMessage="#{myBundle.CreateProductCodeRequiredMessage_discountCode}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <p:outputLabel value="#{myBundle.CreateProductCodeLabel_description}" for="description" />
+                            <p:inputText id="description" value="#{productCodeController.selected.description}" title="#{myBundle.CreateProductCodeTitle_description}" size="10" maxlength="10"/>
+                        </pm:field>
+                    </p:outputPanel>
+                    <p:commandButton actionListener="#{productCodeController.saveNew}" value="#{myBundle.Save}" update="display,:ProductCodeListPage:ProductCodeListForm:datalist,:growl" action="#{mobilePageController.navigateWithHistory('pm:ProductCodeListPage')}">
+                        <p:confirm header="#{myBundle.ConfirmationHeader}" message="#{myBundle.ConfirmCreateMessage}" icon="ui-icon-alert"/>
+                    </p:commandButton>
+
+                </h:panelGroup>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

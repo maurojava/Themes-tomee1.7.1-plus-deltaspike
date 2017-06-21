@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="CustomerListPage">
+        <pm:header title="#{myBundle.ListCustomerTitle}">
+            <h:form>
+                <p:commandButton id="backButton"   styleClass="ui-btn-left  ui-btn-inline" icon="ui-icon-arrow-l" value="#{myBundle.Back}" action="#{mobilePageController.navigateBackInHistory('/mobile/index')}"/>
+                <p:commandButton id="createButton" styleClass="ui-btn-right ui-btn-inline" icon="ui-icon-plus"    value="#{myBundle.Create}" update=":CustomerCreatePage:CustomerCreateForm" actionListener="#{customerController.prepareCreate}" action="#{mobilePageController.navigateWithHistory('pm:CustomerCreatePage')}">
+                    <f:actionListener binding="#{currentPageListener}"/>
+                </p:commandButton>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="CustomerListForm">
+
+                <p:dataTable id="datalist"
+                             value="#{customerController.items}"
+                             var="item"
+                             rowKey="#{item.customerId}"
+                             paginator="true"
+                             rows="10"
+                             rowsPerPageTemplate="10,20,30,40,50"
+                             selectionMode="single"
+                             selection="#{customerController.selected}"
+                             reflow="true">
+
+                    <p:ajax event="rowSelect"   update="@form:editButton,@form:deleteButton,@form:navigationMenuButton,@form:navigationMenuPanel" listener="#{customerController.resetParents}"/>
+                    <p:ajax event="rowUnselect" update="@form:editButton,@form:deleteButton,@form:navigationMenuButton,@form:navigationMenuPanel" listener="#{customerController.resetParents}"/>
+                    <p:ajax event="swipeleft"   oncomplete="document.getElementById('CustomerListPage:CustomerListForm:deleteButton').click();"/>
+                    <p:ajax event="tap"         oncomplete="document.getElementById('CustomerListPage:CustomerListForm:editButton').click();"/>
+                    <p:ajax event="taphold"     oncomplete="document.getElementById('CustomerListPage:CustomerListForm:navigationMenuButton').click();"/>
+
+                    <p:column sortBy="#{item.customerId}" filterBy="#{item.customerId}" headerText="#{myBundle.ListCustomerTitle_customerId}">
+                        <h:outputText value="#{item.customerId}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.name}" filterBy="#{item.name}" headerText="#{myBundle.ListCustomerTitle_name}">
+                        <h:outputText value="#{item.name}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.addressline1}" filterBy="#{item.addressline1}" headerText="#{myBundle.ListCustomerTitle_addressline1}">
+                        <h:outputText value="#{item.addressline1}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.addressline2}" filterBy="#{item.addressline2}" headerText="#{myBundle.ListCustomerTitle_addressline2}">
+                        <h:outputText value="#{item.addressline2}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.city}" filterBy="#{item.city}" headerText="#{myBundle.ListCustomerTitle_city}">
+                        <h:outputText value="#{item.city}"/>
+                    </p:column>
+
+
+                    <p:column sortBy="#{item.state}" filterBy="#{item.state}" headerText="#{myBundle.ListCustomerTitle_state}">
+                        <h:outputText value="#{item.state}"/>
+                    </p:column>
+
+                    <ui:remove>
+                        <p:column sortBy="#{item.phone}" filterBy="#{item.phone}" headerText="#{myBundle.ListCustomerTitle_phone}">
+                            <h:outputText value="#{item.phone}"/>
+                        </p:column>
+                    </ui:remove>>
+                    <ui:remove>
+                        <p:column sortBy="#{item.fax}" filterBy="#{item.fax}" headerText="#{myBundle.ListCustomerTitle_fax}">
+                            <h:outputText value="#{item.fax}"/>
+                        </p:column>
+                    </ui:remove>>
+                    <ui:remove>
+                        <p:column sortBy="#{item.email}" filterBy="#{item.email}" headerText="#{myBundle.ListCustomerTitle_email}">
+                            <h:outputText value="#{item.email}"/>
+                        </p:column>
+                    </ui:remove>>
+                    <ui:remove>
+                        <p:column sortBy="#{item.creditLimit}" filterBy="#{item.creditLimit}" headerText="#{myBundle.ListCustomerTitle_creditLimit}">
+                            <h:outputText value="#{item.creditLimit}"/>
+                        </p:column>
+                    </ui:remove>>
+                </p:dataTable>
+                <p:commandButton id="editButton"   style="visibility: hidden;" icon="ui-icon-pencil" value="#{myBundle.Edit}" update=":CustomerEditPage:CustomerEditForm" disabled="#{empty customerController.selected}" actionListener="#{mobilePageController.currentPageListener}" action="#{mobilePageController.navigateWithHistory('pm:CustomerEditPage')}"/>
+                <p:commandButton id="deleteButton" style="visibility: hidden;" icon="ui-icon-trash"  value="#{myBundle.Delete}" actionListener="#{customerController.delete}" update=":growl,datalist" disabled="#{empty customerController.selected}"/>
+                <p:commandButton id="navigationMenuButton" style="visibility: hidden;" value="#{myBundle.Menu}" disabled="#{empty customerController.selected}"/>
+
+                <p:overlayPanel id="navigationMenuPanel" for="navigationMenuButton" at="right" showEffect="overlay">
+                    <h2>#{myBundle.CustomerHeading} #{myBundle.Menu}</h2>
+                    <p:menu>
+                        <p:menuitem value="#{myBundle.CustomerMenuItem_purchaseOrderList}" icon="ui-icon-search"  action="#{mobilePageController.navigateWithHistory}" disabled="#{empty customerController.selected.purchaseOrderList}" ajax="false">
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="#{customerController.navigatePurchaseOrderList()}"/>
+                        </p:menuitem>  
+                        <p:menuitem value="#{myBundle.CustomerMenuItem_zip}" icon="ui-icon-search" update=":MicroMarketEditPage:MicroMarketEditForm" disabled="#{empty customerController.selected.zip}" actionListener="#{customerController.prepareZip}" action="#{mobilePageController.navigateWithHistory}">  
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="pm:MicroMarketEditPage"/>
+                        </p:menuitem>
+                        <p:menuitem value="#{myBundle.CustomerMenuItem_discountCode}" icon="ui-icon-search" update=":DiscountCodeEditPage:DiscountCodeEditForm" disabled="#{empty customerController.selected.discountCode}" actionListener="#{customerController.prepareDiscountCode}" action="#{mobilePageController.navigateWithHistory}">  
+                            <f:actionListener binding="#{currentPageActionListener}"/>
+                            <f:setPropertyActionListener target="#{mobilePageController.nextPage}" value="pm:DiscountCodeEditPage"/>
+                        </p:menuitem>
+                    </p:menu>
+                </p:overlayPanel>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

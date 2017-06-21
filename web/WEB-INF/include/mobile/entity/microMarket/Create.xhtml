@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="MicroMarketCreatePage" lazy="true">
+        <pm:header title="#{myBundle.CreateMicroMarketTitle}">
+            <h:form>
+                <p:commandButton styleClass="ui-btn-left ui-btn-inline" value="#{myBundle.Cancel}" icon="ui-icon-arrow-l" action="#{mobilePageController.navigateBackInHistory('pm:MicroMarketListPage')}"/>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="MicroMarketCreateForm">
+
+                <h:panelGroup id="display" rendered="#{microMarketController.selected != null}">
+                    <p:outputPanel>
+
+                        <pm:field>
+                            <p:outputLabel value="#{myBundle.CreateMicroMarketLabel_zipCode}" for="zipCode" />
+                            <p:inputText id="zipCode" value="#{microMarketController.selected.zipCode}" title="#{myBundle.CreateMicroMarketTitle_zipCode}" required="true" requiredMessage="#{myBundle.CreateMicroMarketRequiredMessage_zipCode}" size="10" maxlength="10"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <p:outputLabel value="#{myBundle.CreateMicroMarketLabel_radius}" for="radius" />
+                            <p:inputText id="radius" value="#{microMarketController.selected.radius}" title="#{myBundle.CreateMicroMarketTitle_radius}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <p:outputLabel value="#{myBundle.CreateMicroMarketLabel_areaLength}" for="areaLength" />
+                            <p:inputText id="areaLength" value="#{microMarketController.selected.areaLength}" title="#{myBundle.CreateMicroMarketTitle_areaLength}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <p:outputLabel value="#{myBundle.CreateMicroMarketLabel_areaWidth}" for="areaWidth" />
+                            <p:inputText id="areaWidth" value="#{microMarketController.selected.areaWidth}" title="#{myBundle.CreateMicroMarketTitle_areaWidth}"/>
+                        </pm:field>
+                    </p:outputPanel>
+                    <p:commandButton actionListener="#{microMarketController.saveNew}" value="#{myBundle.Save}" update="display,:MicroMarketListPage:MicroMarketListForm:datalist,:growl" action="#{mobilePageController.navigateWithHistory('pm:MicroMarketListPage')}">
+                        <p:confirm header="#{myBundle.ConfirmationHeader}" message="#{myBundle.ConfirmCreateMessage}" icon="ui-icon-alert"/>
+                    </p:commandButton>
+
+                </h:panelGroup>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

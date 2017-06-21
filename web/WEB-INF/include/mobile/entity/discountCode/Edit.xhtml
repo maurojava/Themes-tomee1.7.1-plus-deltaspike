@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="DiscountCodeEditPage" lazy="true">
+        <pm:header title="#{myBundle.EditDiscountCodeTitle}">
+            <h:form>
+                <p:commandButton styleClass="ui-btn-left ui-btn-inline" value="#{myBundle.Cancel}" icon="ui-icon-arrow-l" action="#{mobilePageController.navigateBackInHistory('pm:DiscountCodeListPage')}"/>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="DiscountCodeEditForm">
+
+                <h:panelGroup id="display">
+                    <p:outputPanel rendered="#{discountCodeController.selected != null}">
+
+                        <pm:field>
+                            <h:outputLabel value="#{myBundle.EditDiscountCodeLabel_discountCode}" for="discountCode" />
+                            <h:outputText id="discountCode" value="#{discountCodeController.selected.discountCode}" />
+                        </pm:field>
+
+                        <pm:field>
+                            <p:outputLabel value="#{myBundle.EditDiscountCodeLabel_rate}" for="rate" />
+                            <p:inputText id="rate" value="#{discountCodeController.selected.rate}" title="#{myBundle.EditDiscountCodeTitle_rate}"/>
+                        </pm:field>
+                    </p:outputPanel>
+                    <p:commandButton actionListener="#{discountCodeController.save}" value="#{myBundle.Save}" update="#{mobilePageController.updatableWidgets(component,'display,:DiscountCodeListPage:DiscountCodeListForm:datalist,:growl')}" action="#{mobilePageController.navigateWithHistory('pm:DiscountCodeListPage')}">
+                        <p:confirm header="#{myBundle.ConfirmationHeader}" message="#{myBundle.ConfirmEditMessage}" icon="ui-icon-alert"/>
+                    </p:commandButton>
+
+                </h:panelGroup>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>

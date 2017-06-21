@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pm="http://primefaces.org/mobile">
+
+    <pm:page id="CustomerViewPage" lazy="true">
+        <pm:header title="#{myBundle.ViewCustomerTitle}">
+            <h:form>
+                <p:commandButton styleClass="ui-btn-left ui-btn-inline" value="#{myBundle.Cancel}" icon="ui-icon-arrow-l" action="#{mobilePageController.navigateBackInHistory('pm:CustomerListPage')}"/>
+            </h:form>
+        </pm:header>
+
+        <pm:content>
+
+            <h:form id="CustomerViewForm">
+
+                <h:panelGroup id="display">
+                    <p:outputPanel rendered="#{customerController.selected != null}">
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_customerId}"/>
+                            <h:outputText value="#{customerController.selected.customerId}" title="#{myBundle.ViewCustomerTitle_customerId}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_name}"/>
+                            <h:outputText value="#{customerController.selected.name}" title="#{myBundle.ViewCustomerTitle_name}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_addressline1}"/>
+                            <h:outputText value="#{customerController.selected.addressline1}" title="#{myBundle.ViewCustomerTitle_addressline1}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_addressline2}"/>
+                            <h:outputText value="#{customerController.selected.addressline2}" title="#{myBundle.ViewCustomerTitle_addressline2}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_city}"/>
+                            <h:outputText value="#{customerController.selected.city}" title="#{myBundle.ViewCustomerTitle_city}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_state}"/>
+                            <h:outputText value="#{customerController.selected.state}" title="#{myBundle.ViewCustomerTitle_state}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_phone}"/>
+                            <h:outputText value="#{customerController.selected.phone}" title="#{myBundle.ViewCustomerTitle_phone}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_fax}"/>
+                            <h:outputText value="#{customerController.selected.fax}" title="#{myBundle.ViewCustomerTitle_fax}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_email}"/>
+                            <h:outputText value="#{customerController.selected.email}" title="#{myBundle.ViewCustomerTitle_email}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_creditLimit}"/>
+                            <h:outputText value="#{customerController.selected.creditLimit}" title="#{myBundle.ViewCustomerTitle_creditLimit}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_zip}"/>
+                            <h:outputText value="#{customerController.selected.zip.zipCode}"/>
+                        </pm:field>
+
+                        <pm:field>
+                            <h:outputText value="#{myBundle.ViewCustomerLabel_discountCode}"/>
+                            <h:outputText value="#{customerController.selected.discountCode.discountCode}"/>
+                        </pm:field>
+                    </p:outputPanel>
+                </h:panelGroup>
+
+            </h:form>
+
+        </pm:content>
+
+    </pm:page>
+
+</ui:composition>
